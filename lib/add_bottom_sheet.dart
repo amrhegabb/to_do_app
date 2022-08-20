@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/database/my_database.dart';
+import 'package:to_do_app/database/task.dart';
+import 'package:to_do_app/dialogUI.dart';
 
 class AddBottomSheet extends StatefulWidget {
   const AddBottomSheet({Key? key}) : super(key: key);
@@ -10,16 +13,17 @@ class AddBottomSheet extends StatefulWidget {
 class _AddBottomSheetState extends State<AddBottomSheet> {
   var formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
+  TextEditingController taskTitleController = TextEditingController();
+  TextEditingController taskdetailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController taskTitleController = TextEditingController();
-    TextEditingController taskdetailController = TextEditingController();
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: Form(
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -85,7 +89,9 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                                     side: BorderSide(
                                         color:
                                             Theme.of(context).primaryColor)))),
-                    onPressed: () {},
+                    onPressed: () {
+                      addTask();
+                    },
                     child: const Text(
                       'Add',
                       style: TextStyle(fontSize: 18),
@@ -107,6 +113,33 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
     if (dateTime != null) {
       selectedDate = dateTime;
       setState(() {});
+    }
+  }
+
+  void addTask() {
+    if (formKey.currentState!.validate()) {
+      String title = taskTitleController.text;
+      var desc = taskdetailController.text;
+      Task task = Task(
+          title: title,
+          dateTime: selectedDate,
+          isDone: false,
+          description: desc);
+      MyDatabase.insertTask(task).then((value) {
+        showMessage(
+          context,
+          "Task Added Sucsuufuly",
+          positiveactionName: "ok",
+          positiveAction: () {
+            Navigator.pop(context);
+          },
+        );
+      }).onError((error, stackTrace) {
+        hideLoding(context);
+        showMessage(context, "Something went wrong try again");
+      }).timeout(const Duration(seconds: 5), onTimeout: () {
+        showMessage(context, "Task saved  localy ");
+      });
     }
   }
 }
