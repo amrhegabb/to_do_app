@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/database/my_database.dart';
 import 'package:to_do_app/database/task.dart';
+import 'package:to_do_app/dateUtils.dart';
 import 'package:to_do_app/dialogUI.dart';
 
 class AddBottomSheet extends StatefulWidget {
@@ -122,7 +123,7 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
       var desc = taskdetailController.text;
       Task task = Task(
           title: title,
-          dateTime: selectedDate,
+          dateTime: dateOnly(selectedDate),
           isDone: false,
           description: desc);
       MyDatabase.insertTask(task).then((value) {

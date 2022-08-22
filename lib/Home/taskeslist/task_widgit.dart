@@ -1,17 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:to_do_app/database/my_database.dart';
+import 'package:to_do_app/database/task.dart';
+import 'package:to_do_app/dialogUI.dart';
 import 'package:to_do_app/my_theme.dart';
 
-class TaskWidgit extends StatefulWidget {
-  const TaskWidgit({Key? key}) : super(key: key);
-
-  @override
-  State<TaskWidgit> createState() => _TaskWidgitState();
-}
-
-class _TaskWidgitState extends State<TaskWidgit> {
+// ignore: must_be_immutable
+class TaskWidgit extends StatelessWidget {
+  Task task;
+  TaskWidgit({
+    Key? key,
+    required this.task,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,14 +23,28 @@ class _TaskWidgitState extends State<TaskWidgit> {
           children: [
             SlidableAction(
               autoClose: true,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12),
                   bottomLeft: Radius.circular(12)),
               padding: const EdgeInsets.all(10),
               icon: Icons.delete,
               backgroundColor: MyTheme.red,
               label: 'delete',
-              onPressed: (BuildContext context) {},
+              onPressed: (_) {
+                MyDatabase.deleteTask(task).then((value) {
+                  showMessage(
+                    context,
+                    "Data Deleted Sucssufuly",
+                  );
+                }).onError((error, stackTrace) {
+                  showMessage(context, "message");
+                }).timeout(
+                  const Duration(seconds: 5),
+                  onTimeout: () {
+                    showMessage(context, "Data deleted locally");
+                  },
+                );
+              },
             ),
           ],
         ),
@@ -56,7 +71,7 @@ class _TaskWidgitState extends State<TaskWidgit> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Task Title",
+                      task.title ?? "",
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(
@@ -69,7 +84,7 @@ class _TaskWidgitState extends State<TaskWidgit> {
                           color: Colors.grey,
                         ),
                         Text(
-                          "10:30 Am",
+                          task.description ?? "",
                           style: Theme.of(context).textTheme.bodySmall,
                         )
                       ],
