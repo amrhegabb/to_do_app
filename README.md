@@ -3,14 +3,9 @@
 A new Flutter project.
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This simple application allows you to note your next tasks by time and date, you can add them to
+done tasks and you can delete them, and it can reminder your task and repeater, and show all the
+tasks in calendar.
+Todo-App Using Provider, FitebaseFireStore, 
+## App
+![](https://github.com/amrhegabb/islami-c6-sun/blob/development/ScreenShots/logo.png)
